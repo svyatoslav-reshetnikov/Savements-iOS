@@ -1,0 +1,10 @@
+PODS:
+  - SwiftLoader (0.2.2)
+
+DEPENDENCIES:
+  - SwiftLoader
+
+SPEC CHECKSUMS:
+  SwiftLoader: 9c5e547ae8e00b1c1079139492d6a273c7f73171
+
+COCOAPODS: 0.38.2
