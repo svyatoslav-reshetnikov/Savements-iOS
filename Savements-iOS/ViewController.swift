@@ -8,16 +8,52 @@
 
 import UIKit
 import SwiftLoader
+import ReachabilitySwift
 
 class ViewController: UIViewController, UIWebViewDelegate {
 
     @IBOutlet weak var webView: UIWebView!
     
+    let reachability = Reachability.reachabilityForInternetConnection()
     let url = "http://m.savements.ru/"
     
     override func viewDidLoad() {
         super.viewDidLoad()
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        reachability.whenReachable = { reachability in
+            if reachability.isReachableViaWiFi() {
+                println("Reachable via WiFi")
+                self.setWebView()
+            } else {
+                println("Reachable via Cellular")
+                self.setWebView()
+            }
+        }
+        reachability.whenUnreachable = { reachability in
+            println("Not reachable")
+            self.showAlert()
+        }
         
+        reachability.startNotifier()
+        
+        if (reachability.currentReachabilityStatus == Reachability.NetworkStatus.NotReachable) {
+            showAlert()
+            println("Not reachable")
+        }
+        else {
+            setWebView()
+            println("OK")
+        }
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    func setWebView() {
         let requestURL = NSURL(string: url)
         let request = NSURLRequest(URL: requestURL!)
         
@@ -26,10 +62,13 @@ class ViewController: UIViewController, UIWebViewDelegate {
         
         webView.loadRequest(request)
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    func showAlert() {
+        let alertController = UIAlertController(title: "Соединение прервано", message:
+            "Проверьте ваше интернет-соединение в настройках", preferredStyle: UIAlertControllerStyle.Alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default,handler: nil))
+        
+        self.presentViewController(alertController, animated: true, completion: nil)
     }
     
     func webViewDidStartLoad(webView: UIWebView) {

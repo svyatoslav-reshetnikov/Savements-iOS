@@ -5,6 +5,7 @@ use_frameworks!
 target 'Savements-iOS' do
 
 pod 'SwiftLoader'
+pod 'ReachabilitySwift', git: 'https://github.com/ashleymills/Reachability.swift'
 
 end
 
